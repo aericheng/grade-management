@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "NYCU 成績管理助手",
+  "version": "0.1.0",
+  "description": "NYCU 成績管理助手：自動抓取學期成績紀錄並顯示於側邊欄",
+  "permissions": [
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "https://regist.nycu.edu.tw/*"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "NYCU 成績管理助手"
+  },
+  "icons": {
+    "16": "128.png",
+    "48": "128.png",
+    "128": "128.png"
+  }
+}

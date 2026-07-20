@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYCU 成績管理</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="gm-panel">
+    <div class="gm-container">
+        <div class="gm-header-row">
+          <div class="gm-header-left">
+            <button id="gm-fetch" class="gm-icon-btn" title="重新抓取">🔄</button>
+          </div>
+        <div class="gm-header-title">NYCU 成績管理</div>
+        <div class="gm-header-buttons">
+          <button id="gm-log" class="gm-icon-btn" title="查看日誌">📋</button>
+          <button class="gm-icon-btn gm-icon-danger" id="gm-close" aria-label="關閉">✕</button>
+        </div>
+      </div>
+      <div class="gm-status-bar" id="gm-status">待命中</div>
+      <div class="gm-tab-buttons">
+        <button class="gm-tab-btn active" data-tab="grades">成績</button>
+        <button class="gm-tab-btn" data-tab="graduation">畢業學分</button>
+      </div>
+      <div class="gm-tab-content active" data-content="grades">
+        <div class="gm-content" id="gm-content">
+          <div class="gm-placeholder">尚未抓取資料</div>
+        </div>
+      </div>
+      <div class="gm-tab-content" data-content="graduation">
+        <div class="gm-grad-upload">
+          <div class="gm-grad-upload-item">
+            <div class="gm-grad-label">必修清單（CSV：課名,學分）</div>
+            <textarea id="gm-required-input" rows="5" placeholder="課名,學分"></textarea>
+            <div class="gm-grad-hint">已載入 <span id="gm-required-count">0</span> 門</div>
+          </div>
+          <div class="gm-grad-upload-item">
+            <div class="gm-grad-label">系選修清單（CSV：課名,學分）</div>
+            <textarea id="gm-elective-input" rows="5" placeholder="課名,學分"></textarea>
+            <div class="gm-grad-hint">已載入 <span id="gm-elective-count">0</span> 門</div>
+          </div>
+        </div>
+        <div class="gm-grad-table">
+          <div class="gm-grad-row gm-grad-head">
+            <div>選別</div>
+            <div>學分數</div>
+            <div>需修習學分數</div>
+            <div>尚需學分數</div>
+          </div>
+          <div class="gm-grad-row">
+            <div>必修</div>
+            <div data-earned="required">0</div>
+            <div><input class="gm-grad-input" data-required-input="required" value="0"></div>
+            <div data-remaining="required">0</div>
+          </div>
+          <div class="gm-grad-row">
+            <div>核心選修</div>
+            <div data-earned="core_elective">0</div>
+            <div><input class="gm-grad-input" data-required-input="core_elective" value="0"></div>
+            <div data-remaining="core_elective">0</div>
+          </div>
+          <div class="gm-grad-row">
+            <div>其他選修</div>
+            <div data-earned="other_elective">0</div>
+            <div><input class="gm-grad-input" data-required-input="other_elective" value="0"></div>
+            <div data-remaining="other_elective">0</div>
+          </div>
+          <div class="gm-grad-row">
+            <div>核心課程-基本素養</div>
+            <div data-earned="core_basic">0</div>
+            <div><input class="gm-grad-input" data-required-input="core_basic" value="0"></div>
+            <div data-remaining="core_basic">0</div>
+          </div>
+          <div class="gm-grad-row">
+            <div>核心課程-領域課程</div>
+            <div data-earned="core_domain">0</div>
+            <div><input class="gm-grad-input" data-required-input="core_domain" value="0"></div>
+            <div data-remaining="core_domain">0</div>
+          </div>
+          <div class="gm-grad-row">
+            <div>英語</div>
+            <div data-earned="english">0</div>
+            <div><input class="gm-grad-input" data-required-input="english" value="0"></div>
+            <div data-remaining="english">0</div>
+          </div>
+          <div class="gm-grad-row">
+            <div>共同-外語</div>
+            <div data-earned="foreign">0</div>
+            <div><input class="gm-grad-input" data-required-input="foreign" value="0"></div>
+            <div data-remaining="foreign">0</div>
+          </div>
+          <div class="gm-grad-row gm-grad-total">
+            <div>總學分</div>
+            <div data-earned="total">0</div>
+            <div><span id="gm-required-total">0</span></div>
+            <div data-remaining="total">0</div>
+          </div>
+        </div>
+        <div class="gm-grad-list">
+          <div class="gm-grad-list-section">
+            <div class="gm-grad-list-title">必修修課列表</div>
+            <div id="gm-required-list" class="gm-grad-list-items"></div>
+          </div>
+          <div class="gm-grad-list-section">
+            <div class="gm-grad-list-title">系選修修課列表</div>
+            <div id="gm-elective-list" class="gm-grad-list-items"></div>
+          </div>
+        </div>
+        <div class="gm-grad-detail">
+          <div class="gm-grad-list-title">分類修課明細</div>
+          <div class="gm-grad-detail-grid">
+            <div class="gm-grad-list-section">
+              <div class="gm-grad-list-title">核心課程-基本素養</div>
+              <div class="gm-grad-list-items" data-detail-list="core_basic"></div>
+            </div>
+            <div class="gm-grad-list-section">
+              <div class="gm-grad-list-title">核心課程-領域課程</div>
+              <div class="gm-grad-list-items" data-detail-list="core_domain"></div>
+            </div>
+            <div class="gm-grad-list-section">
+              <div class="gm-grad-list-title">英語</div>
+              <div class="gm-grad-list-items" data-detail-list="english"></div>
+            </div>
+            <div class="gm-grad-list-section">
+              <div class="gm-grad-list-title">共同-外語</div>
+              <div class="gm-grad-list-items" data-detail-list="foreign"></div>
+            </div>
+            <div class="gm-grad-list-section">
+              <div class="gm-grad-list-title">其他選修</div>
+              <div class="gm-grad-list-items" data-detail-list="other_elective"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="gm-modal" id="gm-debug-modal" aria-hidden="true">
+      <div class="gm-modal-backdrop" data-modal-close="true"></div>
+      <div class="gm-modal-panel" role="dialog" aria-modal="true" aria-labelledby="gm-debug-title">
+        <div class="gm-modal-header">
+          <div class="gm-modal-title" id="gm-debug-title">Debug 日誌</div>
+          <div class="gm-modal-actions">
+            <button class="gm-icon-btn" id="gm-debug-copy" title="複製日誌">📄</button>
+            <button class="gm-icon-btn gm-icon-danger" data-modal-close="true" aria-label="關閉">✕</button>
+          </div>
+        </div>
+        <div class="gm-debug" id="gm-debug"></div>
+      </div>
+    </div>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
